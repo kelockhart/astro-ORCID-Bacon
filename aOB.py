@@ -7,6 +7,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pickle
 import csv
+import json
 
 import os
 curr = os.getcwd()
@@ -144,6 +145,34 @@ def calc_centrality(path=curr,verbose=False):
     with open('centrality.csv', 'w') as f:
         writer = csv.writer(f, delimiter='\t')
         writer.writerows(zip(sort_orcids,sort_central))
+
+def centrality_rank(path=curr, node=None):
+    """
+    Returns the rank of a given node. If no node is given, return the top three nodes
+
+    :param path: path to where the output file is stored
+    :param node1: ORCID ID to find rank of
+    :return: rank(s)
+    """
+
+    with open(path + '/' + 'centrality.csv', 'rb') as f:
+        centrality = csv.reader(f, delimiter='\t')
+
+        ranks = []
+        if node is not None:
+            rn = 0
+            for row in centrality:
+                if row[0] == node:
+                    ranks.append([row[0], str(rn)])
+                else:
+                    rn += 1
+        else:
+            centrality_list = list(centrality)
+            ranks.append([centrality_list[0][0], '1'])
+            ranks.append([centrality_list[1][0], '2'])
+            ranks.append([centrality_list[2][0], '3'])
+
+    return json.dumps(ranks)
 
 def calc_path_2_ORCIDs(path=curr,node1=None,node2=None):
     """
