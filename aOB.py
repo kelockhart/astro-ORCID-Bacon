@@ -225,8 +225,7 @@ def find_coauthors_without_ORCID(path=curr,node=None):
     """
 
     if node is None:
-        print('Please enter an ORCID ID.')
-        return
+        return 'Please enter an ORCID ID.', 404
 
     orcid_data = np.load(path + '/' + 'all_astro_orcid_papers.npy')
 
@@ -238,5 +237,5 @@ def find_coauthors_without_ORCID(path=curr,node=None):
                 if ind == '-':
                     coauthors.add(orcid_data[i]['author'][j])
 
-    print('Coauthors missing ORCID IDs: ')
-    print(sorted(coauthors))
+    coauthors = list(sorted(coauthors))
+    return json.dumps(coauthors)
